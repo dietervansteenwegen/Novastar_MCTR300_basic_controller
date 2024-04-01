@@ -27,7 +27,7 @@ LOG_FMT = (
 DATEFMT = '%d/%m/%Y %H:%M:%S'
 LOGFILE = './logfile.log'
 LOGMAXBYTES = 500000
-TMR_MSECS = 750
+TMR_MSECS = 1000
 
 
 class MilliSecondsFormatter(logging.Formatter):
@@ -94,15 +94,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.statusbar.showMessage('Started...', msecs=2000)
 
     def _setup_pattern_generator(self) -> None:
+        """Pattern generator to cycle through colors/pattern."""
         self.pattern_list = itertools.cycle(
             [
                 mctrl300.MCTRL300.PATTERN_RED,
                 mctrl300.MCTRL300.PATTERN_GREEN,
                 mctrl300.MCTRL300.PATTERN_BLUE,
+                mctrl300.MCTRL300.PATTERN_WHITE,
             ],
         )
 
     def _set_up_timer(self) -> None:
+        """Timer will be used to cycle through colors."""
         self.timer = QTimer()
         self.timer.setInterval(TMR_MSECS)
         self.timer.timeout.connect(self._timer_timeout)
@@ -170,6 +173,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return success
 
     def _update_brightness_from_screen(self) -> None:
+        """Query brightness from screen.
+
+        Query brightness from screen, update slider and slider textbox or show messagebox if
+            query fails.
+        """
         self.log.debug(f'Querying brightness from output {self.selected_port}')
         try:
             brightness = self.led_screen.get_brightness(self.selected_port)
@@ -194,6 +202,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self._change_state_to(2)
 
     def _refresh_serial_ports(self) -> None:
+        """Refresh the available serial ports.
+
+        Query the OS for available serial ports. Update listbox and enable button to
+            open selected port if ports are available.
+        """
         self.lst_serial_ports.clear()
         self.serial_available_ports: List = []
         for port in sorted(serports.get_available_ports()):
@@ -211,7 +224,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lbl_serial_status.setStyleSheet('background-color:orange')
             self._change_state_to(1)
 
-    def _open_serial_port(self, checked) -> None:
+    def _open_serial_port(self, checked: bool) -> None:
         if checked:
             if len(self.serial_available_ports) == 0:
                 # self.lbl_serial_status.setText('No serial ports')
@@ -274,9 +287,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_blackout.setEnabled(False)
 
     def _timer_timeout(self) -> None:
+        """Timeout callback for cycle colors timer.
+
+        If currently set to cycle colors, go to next pattern.
+            If not, stop timer and reset the cycle colors generator.
+        """
         if self.btn_cycle_colors.isChecked():
-            next_pattern = next(self.pattern_list)
-            self.led_screen.set_pattern(next_pattern, self.selected_port)
+            self.led_screen.set_pattern(next(self.pattern_list), self.selected_port)
         else:
             self.timer.stop()
             self._setup_pattern_generator()

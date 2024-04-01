@@ -255,7 +255,7 @@ class Ui_MainWindow(object):
         self.menubar_brightness.addAction(self.set_1_pct)
 
         self.set_5_pct = QtWidgets.QAction(MainWindow)
-        self.set_5_pct.setShortcut('5')
+        self.set_5_pct.setShortcut('2')
         self.set_5_pct.setText('5%')
         self.menubar_brightness.addAction(self.set_5_pct)
 
@@ -270,37 +270,37 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menubar_pattern.menuAction())
 
         self.set_normal = QtWidgets.QAction(MainWindow)
-        self.set_normal.setShortcut('Ctrl+n')
+        self.set_normal.setShortcut('n')
         self.set_normal.setText('&Normal/Live')
         self.menubar_pattern.addAction(self.set_normal)
 
         self.set_red = QtWidgets.QAction(MainWindow)
-        self.set_red.setShortcut('Ctrl+r')
+        self.set_red.setShortcut('r')
         self.set_red.setText('&Red')
         self.menubar_pattern.addAction(self.set_red)
 
         self.set_green = QtWidgets.QAction(MainWindow)
-        self.set_green.setShortcut('Ctrl+g')
+        self.set_green.setShortcut('g')
         self.set_green.setText('&Green')
         self.menubar_pattern.addAction(self.set_green)
 
         self.set_blue = QtWidgets.QAction(MainWindow)
-        self.set_blue.setShortcut('Ctrl+b')
+        self.set_blue.setShortcut('b')
         self.set_blue.setText('&Blue')
         self.menubar_pattern.addAction(self.set_blue)
 
         self.set_white = QtWidgets.QAction(MainWindow)
-        self.set_white.setShortcut('Ctrl+w')
+        self.set_white.setShortcut('w')
         self.set_white.setText('&White')
         self.menubar_pattern.addAction(self.set_white)
 
         self.set_cycle_colors = QtWidgets.QAction(MainWindow)
-        self.set_cycle_colors.setShortcut('Ctrl+c')
+        self.set_cycle_colors.setShortcut('c')
         self.set_cycle_colors.setText('&Cycle colors')
         self.menubar_pattern.addAction(self.set_cycle_colors)
 
         self.set_slash = QtWidgets.QAction(MainWindow)
-        self.set_slash.setShortcut('Ctrl+s')
+        self.set_slash.setShortcut('s')
         self.set_slash.setText('&Slash')
         self.menubar_pattern.addAction(self.set_slash)
 
