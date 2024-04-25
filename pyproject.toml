@@ -127,6 +127,9 @@ ignore = [
     "TRY400",
     # Raising and catching exceptions in the same block may lead to confusion
     "TRY301",
+    "N801",   # PyQT doesn't adhere to 801/802/803
+    "N802",
+    "N803",
 
 ]
 

@@ -14,11 +14,10 @@ from typing import List
 
 import novastar_mctrl300.mctrl300 as mctrl300
 import serial.serialutil
+from gui.ui_sources.main_window import Ui_MainWindow
 from novastar_mctrl300 import serports
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTimer
-
-from .main_window import Ui_MainWindow
 
 LOG_FMT = (
     '%(asctime)s|%(levelname)-8.8s|%(module)-15.15s|%(lineno)-0.3d|'
@@ -59,7 +58,7 @@ def setup_logger() -> logging.Logger:
     return logger
 
 
-def add_rotating_file(logger: logging.Logger) -> logging.Logger:
+def add_rotating_file(logger: logging.Logger) -> None:
     rot_fil_handler = logging.handlers.RotatingFileHandler(
         LOGFILE,
         maxBytes=LOGMAXBYTES,
@@ -70,15 +69,15 @@ def add_rotating_file(logger: logging.Logger) -> logging.Logger:
     rot_fil_handler.setFormatter(MilliSecondsFormatter(LOG_FMT))
     logger.addHandler(rot_fil_handler)
 
-    return logger
+
+log = setup_logger()
+add_rotating_file(log)
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-        log = setup_logger()
-        self.log = add_rotating_file(log)
-        self.log.debug('Starting')
+        log.debug('Starting')
         self.setupUi(self)
         self._refresh_serial_ports()
         self.serport = None
@@ -139,7 +138,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # self.set_blackout.triggered.connect(self._pattern_blackout)
         self.set_freeze.triggered.connect(self._pattern_freeze)
         self.set_cycle_colors.triggered.connect(self._pattern_cycle_colors)
-        self.log.debug('Signals/slots connected')
+        log.debug('Signals/slots connected')
         self.set_1_pct.triggered.connect(lambda _: self.sldr_brightness.setValue(1))
         self.set_5_pct.triggered.connect(lambda _: self.sldr_brightness.setValue(5))
         self.set_100_pct.triggered.connect(lambda _: self.sldr_brightness.setValue(100))
@@ -178,7 +177,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Query brightness from screen, update slider and slider textbox or show messagebox if
             query fails.
         """
-        self.log.debug(f'Querying brightness from output {self.selected_port}')
+        log.debug(f'Querying brightness from output {self.selected_port}')
         try:
             brightness = self.led_screen.get_brightness(self.selected_port)
         except mctrl300.MCTRL300IncorrectReplyError:
@@ -187,7 +186,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if brightness is not None:
             self.lbl_brightness_value.setText(brightness.__str__())
             self.sldr_brightness.setValue(brightness)
-            self.log.debug(f'Response: {brightness}')
+            log.debug(f'Response: {brightness}')
         else:
             QtWidgets.QMessageBox.critical(
                 self,
@@ -197,7 +196,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 '* Cabling \n* Configuration\n* MCTRL3000 powered on',
                 buttons=QtWidgets.QMessageBox.Ok,
             )
-            self.log.error('Issue while getting brightness.')
+            log.error('Issue while getting brightness.')
             self.cmb_output.setCurrentIndex(0)
             self._change_state_to(2)
 
@@ -211,7 +210,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.serial_available_ports: List = []
         for port in sorted(serports.get_available_ports()):
             self.serial_available_ports.append(port)
-            self.log.debug(f'Found serial port: {port[1:]}')
+            log.debug(f'Found serial port: {port[1:]}')
             self.lst_serial_ports.addItem(f' {port[1]}  ({port[2]}, {port[3]})')
             # if port[3][:6] == 'CP2102':
             # TODO: color item in list green (this is a possible controller)
@@ -234,23 +233,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             index = self.lst_serial_ports.currentRow()
             try:
                 p = self.serial_available_ports[index]
-                self.log.debug(f'opening serial port {p[1:]}')
+                log.debug(f'opening serial port {p[1:]}')
                 self.serport = serports.Mctrl300Serial(p[1])
             except (FileNotFoundError, serial.serialutil.SerialException):
-                self.log.exception('Issue during opening.')
+                log.exception('Issue during opening.')
                 self._refresh_serial_ports()
                 self.btn_serial_open.setChecked(False)
                 self._change_state_to(1)
             if self.serport and self.serport.isOpen():
                 self.lbl_serial_status.setText(f'Opened {self.serial_available_ports[index][1]}')
-                self.log.debug('Port open.')
+                log.debug('Port open.')
                 self.btn_serial_open.setText(
                     f'Click to close {self.serial_available_ports[index][1]}',
                 )
                 self.lbl_serial_status.setStyleSheet('background-color:green')
                 self._change_state_to(2)
             else:
-                self.log.error(f'Issue during opening port {p}.')
+                log.error(f'Issue during opening port {p}.')
                 self.lbl_serial_status.setText('Error opening port. See logs.')
                 self.lbl_serial_status.setStyleSheet('background-color:red')
                 self.serport = None
@@ -258,7 +257,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             if self.serport:
                 self.serport.close()
-                self.log.debug(f'Closed {self.serport}')
+                log.debug(f'Closed {self.serport}')
             self.lbl_serial_status.setText('Closed serial port')
             self.lbl_serial_status.setStyleSheet('background-color:orange')
             self.btn_serial_open.setText('Click to open selected port')
@@ -302,7 +301,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.led_screen:
             # self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_RED, self.selected_port)
             self.btn_cycle_colors.setChecked(True)
-            self.log.debug('Cycle colors activated.')
+            log.debug('Cycle colors activated.')
             self.timer.start()
             self._timer_timeout()
 

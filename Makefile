@@ -1,29 +1,28 @@
 ## Based on https://duarteocarmo.com/blog/opinionated-python-boilerplate
 
-.PHONY: install clean prep build
+.PHONY: prep ui cleanup_git
 
-## Install for production
-install:
-	@echo ">> Installing dependencies"
-	python -m pip install --upgrade pip
-	python -m pip install -e .
+## Create list of local branches in a temporary file.
+## Afterwards remove all branches from file.
+cleanup_git:
+	@echo "*****************************************************************************"
+	@echo ">> Creating list of all merged branches without current, master or develop"
+	@echo ">> Will fail if no branches are to be deleted"
+	@echo "*****************************************************************************"
 
-## Delete all temporary files
-clean:
-	rm -rf build
-	rm -rf dist
+	@git branch --merged | grep -iv "master\|develop\|*" >/tmp/merged-branches
+	@echo ">> Edit list so that it only contains branches to be deleted, then save."
+	@echo ">> Hit <CTRL> + C to cancel."
+	@vi /tmp/merged-branches && xargs git branch -d </tmp/merged-branches
+
+
 
 ## run pre-commit rules
 prep:
 	pre-commit run --all-files
 
-## Build using pip-tools
-build:
-	python -m pip install --upgrade pip
-	# python -m pip install pip-tools
-	# pip-compile --resolver=backtracking --output-file=requirements.txt pyproject.toml
-	# pip-compile --resolver=backtracking --output-file=requirements-dev.txt pyproject.toml
-
+ui:
+	pyuic5 ./assets/designer/main_window.ui -o ./src/gui/ui_sources/main_window.py
 
 #################################################################################
 # Self Documenting Commands                                                     #
