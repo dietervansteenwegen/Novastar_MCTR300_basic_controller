@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>Dieter Vansteenwegen</author>
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>487</width>
+    <width>494</width>
     <height>417</height>
    </rect>
   </property>
   <property name="cursor">
-   <cursorShape>ClosedHandCursor</cursorShape>
+   <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string notr="true">Novastar MCTRL300 basic controller</string>
@@ -172,6 +173,9 @@
           </item>
           <item>
            <widget class="QSlider" name="sldr_brightness">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimumSize">
              <size>
               <width>70</width>
@@ -188,7 +192,10 @@
              <number>255</number>
             </property>
             <property name="value">
-             <number>0</number>
+             <number>8</number>
+            </property>
+            <property name="sliderPosition">
+             <number>8</number>
             </property>
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -229,96 +236,110 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>20</height>
-             </size>
+         <widget class="QGroupBox" name="grp_patterns">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>Pattern/Label:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="layoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>20</y>
+             <width>112</width>
+             <height>260</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="leftMargin">
+             <number>5</number>
             </property>
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string notr="true">Input/pattern:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_normal">
-            <property name="text">
-             <string notr="true">Live (input)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_red">
-            <property name="text">
-             <string notr="true">Red</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_green">
-            <property name="text">
-             <string notr="true">Green</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_blue">
-            <property name="text">
-             <string notr="true">Blue</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_white">
-            <property name="text">
-             <string notr="true">White</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_cycle_colors">
-            <property name="text">
-             <string notr="true">Cycle colors</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_slash">
-            <property name="text">
-             <string notr="true">Slash</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_blackout">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string notr="true">Blackout</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="btn_freeze">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string notr="true">Freeze</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+            <item>
+             <widget class="QRadioButton" name="btn_normal">
+              <property name="text">
+               <string notr="true">Live (input)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="btn_red">
+              <property name="text">
+               <string notr="true">Red</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="btn_green">
+              <property name="text">
+               <string notr="true">Green</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="btn_blue">
+              <property name="text">
+               <string notr="true">Blue</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="btn_white">
+              <property name="text">
+               <string notr="true">White</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="btn_cycle_colors">
+              <property name="text">
+               <string notr="true">Cycle colors</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="btn_slash">
+              <property name="text">
+               <string notr="true">Slash</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="btn_blackout">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string notr="true">Blackout</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="btn_freeze">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string notr="true">Freeze</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </item>
@@ -331,7 +352,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>487</width>
+     <width>494</width>
      <height>20</height>
     </rect>
    </property>
@@ -349,10 +370,13 @@
     <property name="title">
      <string>Brightness</string>
     </property>
-    <addaction name="set_1_pct"/>
-    <addaction name="set_5_pct"/>
-    <addaction name="set_50_pct"/>
-    <addaction name="set_100_pct"/>
+    <addaction name="brightness_1_pct"/>
+    <addaction name="brightness_5_pct"/>
+    <addaction name="brightness_50_pct"/>
+    <addaction name="brightness_100_pct"/>
+    <addaction name="separator"/>
+    <addaction name="brightness_up"/>
+    <addaction name="brightness_down"/>
    </widget>
    <widget class="QMenu" name="menuPattern">
     <property name="enabled">
@@ -361,16 +385,26 @@
     <property name="title">
      <string>Pattern</string>
     </property>
-    <addaction name="actionLive"/>
-    <addaction name="actionRed"/>
-    <addaction name="actionGreen"/>
-    <addaction name="actionBlue"/>
-    <addaction name="actionWhite"/>
-    <addaction name="actionCycle_colors"/>
-    <addaction name="actionSlash"/>
-    <addaction name="actionBlackout"/>
-    <addaction name="actionFreeze"/>
+    <addaction name="pattern_live"/>
+    <addaction name="pattern_red"/>
+    <addaction name="pattern_green"/>
+    <addaction name="pattern_blue"/>
+    <addaction name="pattern_white"/>
+    <addaction name="pattern_cycle_colors"/>
+    <addaction name="pattern_slash"/>
+    <addaction name="pattern_black"/>
+    <addaction name="pattern_freeze"/>
+    <addaction name="separator"/>
+    <addaction name="pattern_next"/>
+    <addaction name="pattern_previous"/>
    </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="action_Exit"/>
+   </widget>
+   <addaction name="menuFile"/>
    <addaction name="menuPattern"/>
    <addaction name="menuBrightness"/>
    <addaction name="menu_help"/>
@@ -396,39 +430,39 @@
     <string notr="true">Ctrl+Shift+A</string>
    </property>
   </action>
-  <action name="set_1_pct">
+  <action name="brightness_1_pct">
    <property name="text">
-    <string>1</string>
+    <string>1%</string>
    </property>
    <property name="shortcut">
     <string>1</string>
    </property>
   </action>
-  <action name="set_5_pct">
+  <action name="brightness_5_pct">
    <property name="text">
-    <string>5</string>
+    <string>5%</string>
    </property>
    <property name="shortcut">
     <string>2</string>
    </property>
   </action>
-  <action name="set_50_pct">
+  <action name="brightness_50_pct">
    <property name="text">
-    <string>50</string>
+    <string>50%</string>
    </property>
    <property name="shortcut">
-    <string>3</string>
+    <string>5</string>
    </property>
   </action>
-  <action name="set_100_pct">
+  <action name="brightness_100_pct">
    <property name="text">
-    <string>100</string>
+    <string>100%</string>
    </property>
    <property name="shortcut">
-    <string>4</string>
+    <string>0</string>
    </property>
   </action>
-  <action name="actionLive">
+  <action name="pattern_live">
    <property name="text">
     <string>Live</string>
    </property>
@@ -436,7 +470,7 @@
     <string>N</string>
    </property>
   </action>
-  <action name="actionRed">
+  <action name="pattern_red">
    <property name="text">
     <string>Red</string>
    </property>
@@ -444,7 +478,7 @@
     <string>R</string>
    </property>
   </action>
-  <action name="actionGreen">
+  <action name="pattern_green">
    <property name="text">
     <string>Green</string>
    </property>
@@ -452,7 +486,7 @@
     <string>G</string>
    </property>
   </action>
-  <action name="actionBlue">
+  <action name="pattern_blue">
    <property name="text">
     <string>Blue</string>
    </property>
@@ -460,7 +494,7 @@
     <string>B</string>
    </property>
   </action>
-  <action name="actionWhite">
+  <action name="pattern_white">
    <property name="text">
     <string>White</string>
    </property>
@@ -468,7 +502,7 @@
     <string>W</string>
    </property>
   </action>
-  <action name="actionCycle_colors">
+  <action name="pattern_cycle_colors">
    <property name="text">
     <string>Cycle colors</string>
    </property>
@@ -476,7 +510,7 @@
     <string>C</string>
    </property>
   </action>
-  <action name="actionSlash">
+  <action name="pattern_slash">
    <property name="text">
     <string>Slash</string>
    </property>
@@ -484,14 +518,57 @@
     <string>S</string>
    </property>
   </action>
-  <action name="actionBlackout">
+  <action name="pattern_black">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Blackout</string>
    </property>
   </action>
-  <action name="actionFreeze">
+  <action name="pattern_freeze">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Freeze</string>
+   </property>
+  </action>
+  <action name="brightness_up">
+   <property name="text">
+    <string>Brightness up</string>
+   </property>
+   <property name="shortcut">
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="brightness_down">
+   <property name="text">
+    <string>Brightness down</string>
+   </property>
+   <property name="shortcut">
+    <string>Down</string>
+   </property>
+  </action>
+  <action name="pattern_next">
+   <property name="text">
+    <string>Next pattern</string>
+   </property>
+   <property name="shortcut">
+    <string>Right</string>
+   </property>
+  </action>
+  <action name="pattern_previous">
+   <property name="text">
+    <string>Previous pattern</string>
+   </property>
+   <property name="shortcut">
+    <string>Left</string>
+   </property>
+  </action>
+  <action name="action_Exit">
+   <property name="text">
+    <string>&amp;Exit</string>
    </property>
   </action>
  </widget>
@@ -499,15 +576,6 @@
   <tabstop>lst_serial_ports</tabstop>
   <tabstop>btn_serial_open</tabstop>
   <tabstop>cmb_output</tabstop>
-  <tabstop>btn_normal</tabstop>
-  <tabstop>btn_red</tabstop>
-  <tabstop>btn_green</tabstop>
-  <tabstop>btn_blue</tabstop>
-  <tabstop>btn_white</tabstop>
-  <tabstop>btn_cycle_colors</tabstop>
-  <tabstop>btn_slash</tabstop>
-  <tabstop>btn_blackout</tabstop>
-  <tabstop>btn_freeze</tabstop>
   <tabstop>btn_serial_refresh</tabstop>
  </tabstops>
  <resources/>

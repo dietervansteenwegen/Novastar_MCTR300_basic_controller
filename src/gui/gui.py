@@ -3,7 +3,7 @@
 
 __author__ = 'Dieter Vansteenwegen'
 __project__ = 'Novastar_MCTRL300_basic_controller'
-__project_link__ = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller'
+__project_link__ = 'https://boxfish.be/posts/20230213-novastar-mctrl300-basic-control-software/'
 
 import contextlib
 import datetime as dt
@@ -14,10 +14,11 @@ from typing import List
 
 import novastar_mctrl300.mctrl300 as mctrl300
 import serial.serialutil
-from gui.ui_sources.main_window import Ui_MainWindow
 from novastar_mctrl300 import serports
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTimer
+
+from gui.ui_sources.main_window import Ui_MainWindow
 
 LOG_FMT = (
     '%(asctime)s|%(levelname)-8.8s|%(module)-15.15s|%(lineno)-0.3d|'
@@ -349,5 +350,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 def start_gui():
     app = QtWidgets.QApplication([])
     window = MainWindow()
+    window.show()
+    app.exec_()
     window.show()
     app.exec_()
