@@ -20,10 +20,10 @@ dynamic = ["dependencies"]
 
 
 [project.urls]
-Homepage = 'https://www.vansteenwegen.org'
+Homepage = 'https://boxfish.be/posts/20230213-novastar-mctrl300-basic-control-software/'
 # Documentation = 'https://readthedocs.org'
 Repository = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller.git'
-# Changelog = 'https://github.com/me/spam/blob/master/CHANGELOG.md'
+Changelog = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller/CHANGELOG.md'
 
 [project.scripts]
 my-package-script = 'package_dir.package:function'
