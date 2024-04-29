@@ -130,6 +130,7 @@ ignore = [
     "N801",   # PyQT doesn't adhere to 801/802/803
     "N802",
     "N803",
+    "N813",
 
 ]
 
