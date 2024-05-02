@@ -37,7 +37,7 @@ class Status(qtc.QObject):
             self.conn_state = state
             self.sign_conn_status_changed.emit(self.conn_state)
         else:
-            # TODO: Handle lower connection states (i.e. "connected" but no ports are found anymore)
+            # TODO: Handle "downgrading" states (i.e. "connected" but no ports are found anymore)
             msg = (
                 f'Trying to set connection state to {state.name} but currently '
                 f'already on {self.conn_state.name}',

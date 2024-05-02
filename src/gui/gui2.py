@@ -5,18 +5,20 @@ __author__ = 'Dieter Vansteenwegen'
 __project__ = 'Novastar_MCTRL300_basic_controller'
 __project_link__ = 'https://boxfish.be/posts/20230213-novastar-mctrl300-basic-control-software/'
 
+import itertools
 from typing import List
 
+import serial
 from core.status import ConnState, Status
 from log.logging import add_rotating_file, setup_logger
-from novastar_mctrl300 import serports
+from novastar_mctrl300 import MCTRL300, serports
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
 
 from gui.ui_sources.main_window import Ui_MainWindow
 
-TMR_MSECS = 2000
+TMR_MSECS = 1500
 
 log = setup_logger()
 add_rotating_file(log)
@@ -27,30 +29,68 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         log.debug('Starting')
         self.setupUi(self)
+        self._setup_attributes()
         self._create_status()
-        # self.led_screen = None
         # self._setup_pattern_generator()
         # self.statusbar = QtWidgets.QStatusBar()
-        # self.setStatusBar(self.statusbar)
         self._connect_signals()
         self._set_up_timer()
 
+    def _setup_attributes(self) -> None:
+        self.port = serial.Serial()
+        self.led_screen = None
+        self.pattern_list = itertools.cycle(
+            [
+                MCTRL300.PATTERN_RED,
+                MCTRL300.PATTERN_GREEN,
+                MCTRL300.PATTERN_BLUE,
+                MCTRL300.PATTERN_WHITE,
+                MCTRL300.PATTERN_SLASH,
+            ],
+        )
+
+    def _serial_open_clicked(self):
+        if self.btn_serial_open.isChecked():
+            self._open_port()
+        else:
+            if self.port.is_open:
+                self.port.close()
+            self.port = serial.Serial()
+
+    def _open_port(self) -> None:
+        if len(self.serial_available_ports) == 0:
+            self._update_conn_state(state=ConnState.NO_SERIAL_PORTS_DETECTED)
+
     def _connect_signals(self) -> None:
         self.btn_serial_refresh.clicked.connect(self._refresh_serial_ports)
+        self.action_Exit.triggered.connect(qtw.qApp.quit)
+        self.btn_serial_open.clicked.connect(self._serial_open_clicked)
+        self.lst_serial_ports.doubleClicked.connect(self._open_port)
 
     def _create_status(self) -> None:
         self.stat: Status = Status()
         self.stat.sign_conn_status_changed.connect(self._update_conn_state)
         self.stat.sign_statusbar_msg_changed.connect(self._update_statusbar)
 
+    def closeEvent(self) -> None:
+        if self.port.is_open:
+            log.debug(f'Port {self.port} still open, closing')
+            self.port.close()
+
+        log.debug('Quitting application')
+        qtw.qApp.quit()
+
     def _set_up_timer(self) -> None:
         """Timer will be used to cycle through colors."""
         self.timer = qtc.QTimer()
         self.timer.setInterval(TMR_MSECS)
         self.timer.timeout.connect(self._timer_timeout)
-        self.timer.start()
+        self.timer.timeout.emit()
+        self.timer.start(1500)
 
     def _timer_timeout(self) -> None:
+        log.debug('timer expired')
+        # TODO Check connection
         self._refresh_serial_ports()
         # TODO add brightness and curr pattern request (or only when connecting?)
 
@@ -74,6 +114,15 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.cmb_output.setEnabled(curr_state >= ConnState.SERIAL_PORT_OPENED.value)
         self.sldr_brightness.setEnabled(curr_state >= ConnState.SCREEN_CONNECTED.value)
         self.grp_patterns.setEnabled(curr_state >= ConnState.SCREEN_CONNECTED.value)
+        self.menuBrightness.setEnabled(curr_state >= ConnState.SCREEN_CONNECTED.value)
+        self.menuPattern.setEnabled(curr_state >= ConnState.SCREEN_CONNECTED.value)
+        self.btn_serial_open.setEnabled(curr_state >= ConnState.SERIAL_PORTS_DETECTED.value)
+        self.btn_serial_open.setChecked(curr_state >= ConnState.SERIAL_PORT_OPENED.value)
+        self.lbl_serial_status.setStyleSheet(
+            'background-color:green'
+            if curr_state >= ConnState.SERIAL_PORT_OPENED.value
+            else 'background-color:red',
+        )
 
     def _set_state_ports_detected(self) -> None:
         # self.lst_serial_ports.setCurrentRow(0)
@@ -121,8 +170,4 @@ def start_gui():
     app = qtw.QApplication([])
     window = MainWindow()
     window.show()
-    app.exec_()
-    window.show()
-    app.exec_()
-    app.exec_()
     app.exec_()
